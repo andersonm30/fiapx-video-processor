@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build Services
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v2
+
+      - name: Configurar Docker
+        run: |
+          docker-compose build
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v2
+
+      - name: Executar testes
+        run: |
+          npm run test
+
+  rabbitmq-test:
+    name: Test RabbitMQ Message
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v2
+
+      - name: Instalar dependências
+        run: |
+          npm install
+
+      - name: Testar envio de mensagem para RabbitMQ
+        run: |
+          node notification-service/test/sendMessage.ts
