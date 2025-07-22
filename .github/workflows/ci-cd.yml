@@ -42,21 +42,3 @@ jobs:
         working-directory: ./notification-service
         run: |
           npm run test
-
-  rabbitmq-test:
-    name: Test RabbitMQ Message
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v2
-
-      - name: Instalar dependências
-        working-directory: ./notification-service
-        run: |
-          npm install
-
-      - name: Testar envio de mensagem para RabbitMQ
-        working-directory: ./notification-service
-        run: |
-          node test/sendMessage.ts

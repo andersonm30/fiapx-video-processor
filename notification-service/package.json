@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "test": "node test/sendMessage.ts"
+    "test": "ts-node test/sendMessage.ts"
   },
   "dependencies": {
     "amqplib": "^0.10.8",
