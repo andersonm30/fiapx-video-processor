@@ -1,7 +1,10 @@
 import amqp from "amqplib";
 
+// Use variável de ambiente para facilitar deploy!
+const amqpUrl = process.env.RABBITMQ_URL || "amqp://rabbitmq";
+
 async function startNotificationService() {
-  const connection = await amqp.connect("amqp://localhost");
+  const connection = await amqp.connect(amqpUrl);
   const channel = await connection.createChannel();
   await channel.assertQueue("notifications");
 
