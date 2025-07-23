@@ -13,6 +13,9 @@ RUN npm install
 # Copiar o restante dos arquivos do projeto
 COPY . .
 
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 # Compilar TypeScript para JavaScript
 RUN npm run build
 

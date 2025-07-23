@@ -23,7 +23,7 @@ app.get("/metrics", async (req, res) => {
   res.end(await client.register.metrics());
 });
 
-export { app }; // Exportando diretamente
+export { app };
 app.use(cors());
 app.use(express.json());
 app.use(expressFileUpload());

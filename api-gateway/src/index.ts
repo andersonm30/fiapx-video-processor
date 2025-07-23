@@ -1,34 +1,21 @@
-import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-
-dotenv.config();
+import express from 'express';
+import routes from './routes';
+import swaggerUi from 'swagger-ui-express';
+// Se for swagger.json, troque para: import * as swaggerDocument from './swagger.json';
+import swaggerDocument from './swagger';
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 3000;
 
-const PORT = process.env.GATEWAY_PORT || 8000;
+app.use(express.json());
 
-app.get('/gateway/health', (req: Request, res: Response) => {
-  res.json({ status: 'API Gateway is running' });
-});
+// Rotas principais da API
+app.use('/api', routes);
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`[API-GATEWAY] Proxying: ${req.method} ${req.originalUrl}`);
-  next();
-});
-
-// PROXY para /proxy (SEM pathRewrite)
-app.use(
-  '/proxy',
-  createProxyMiddleware({
-    target: 'http://localhost:3000',
-    changeOrigin: true
-    // logLevel: 'debug' // Removido para evitar erro de tipagem
-  } as any) // Força a aceitar opções extras caso precise no futuro
-);
+// Configuração do Swagger (documentação)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {
-  console.log(`API Gateway running on port ${PORT}`);
+  console.log(`API Gateway rodando na porta ${PORT}`);
+  console.log(`Documentação disponível em http://localhost:${PORT}/api-docs`);
 });

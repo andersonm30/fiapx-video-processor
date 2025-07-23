@@ -1,12 +1,11 @@
+import "dotenv/config"; // <<---- Sempre primeiro!
 import "reflect-metadata";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { AppDataSource } from "./data-source";
 import authRoutes from "./routes/authRoutes";
 import { setupSwagger } from "./swagger";
 
-dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -19,6 +18,9 @@ app.get("/health", (req, res) => {
 });
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+
+// Só para debug:
+console.log('DB_HOST:', process.env.DB_HOST);
 
 AppDataSource.initialize()
     .then(() => {
